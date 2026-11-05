@@ -20,13 +20,13 @@ public class RasterizationController {
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
         //произвольный
-        //Rasterization.drawTriangle(canvas.getGraphicsContext2D(), 100, 0, 100, 300, 300, 100, Color.AQUA);
+        //Rasterization.drawTriangle(canvas.getGraphicsContext2D(), 100, 0, 100, 300, 300, 100, new Color[]{Color.RED, Color.BLUE, Color.GREEN});
 
         //остроугольный разносторонний
         //Rasterization.drawTriangle_1(canvas.getGraphicsContext2D(), 100, 220, 160, 100, 240, 200, Color.AQUA);
 
         //прямоугольный разносторонний
-        //Rasterization.drawTriangle(canvas.getGraphicsContext2D(), 100, 100, 300, 200, 100, 300, Color.RED);
+        Rasterization.drawTriangle(canvas.getGraphicsContext2D(), 100, 100, 300, 200, 100, 300, new Color[]{Color.RED, Color.BLUE, Color.GREEN});
 
         //остроугольный разносторонний
         //Rasterization.drawTriangle(canvas.getGraphicsContext2D(), 100, 100, 300, 100, 200, 200, Color.AQUA);
@@ -38,7 +38,7 @@ public class RasterizationController {
         //Rasterization.drawTriangle(canvas.getGraphicsContext2D(), 100, 100, 100, 200, 100, 300, Color.AQUA);
 
         //линия у
-        Rasterization.drawTriangle(canvas.getGraphicsContext2D(), 100, 100, 200, 100, 300, 100, Color.AQUA);
+        Rasterization.drawTriangle(canvas.getGraphicsContext2D(), 100, 100, 200, 100, 300, 100, new Color[]{Color.RED, Color.BLUE, Color.GREEN});
     }
 
 }

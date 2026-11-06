@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Rasterization {
 
@@ -38,52 +39,45 @@ public class Rasterization {
 
         //finding intersection const y and triangle
         for (int y = border_y_up; y <= border_y_down; y++) {
-            if ((y_a != y_b) || (y_b != y_c)) {
-                int intersection_ab = finding_board_x(x_a, y_a, x_b, y_b, y);
-                int intersection_bc = finding_board_x(x_b, y_b, x_c, y_c, y);
-                int intersection_ca = finding_board_x(x_c, y_c, x_a, y_a, y);
+            ArrayList<Integer> borders_x = new ArrayList<>();
+            borders_x.addAll(finding_board_x(x_a, y_a, x_b, y_b, y));
+            borders_x.addAll(finding_board_x(x_b, y_b, x_c, y_c, y));
+            borders_x.addAll(finding_board_x(x_c, y_c, x_a, y_a, y));
 
-                ArrayList<Integer> borders_x = dots_in_box(intersection_ab, intersection_bc, intersection_ca, border_x_left, border_x_right);
-                if (!borders_x.isEmpty()) {
-                    int xLeft = Collections.min(borders_x);
-                    int xRight = Collections.max(borders_x);
+            ArrayList<Integer> inside = new ArrayList<>(borders_x.size());
+            for (Integer xi : borders_x) {
+                if (xi != null && border_x_left <= xi && xi <= border_x_right) {
+                    inside.add(xi);
+                }
+            }
+            if (inside.isEmpty()) continue;
 
-                    for (int x = xLeft; x <= xRight; x++) {
-                        pixelWriter.setColor(x, y, interpolated(x_a, y_a, x_b, y_b, x_c, y_c, x, y, color));
-                    }
-                }
-            } else {
-                for (int x = border_x_left; x <= border_x_right; x++) {
-                    pixelWriter.setColor(x, y, interpolated(x_a, y_a, x_b, y_b, x_c, y_c, x, y, color));
-                }
+            int xLeft  = Collections.min(inside);
+            int xRight = Collections.max(inside);
+
+            for (int x = xLeft; x <= xRight; x++) {
+                pixelWriter.setColor(x, y, interpolated(x_a, y_a, x_b, y_b, x_c, y_c, x, y, color));
             }
         }
 
     }
 
-    //point membership test
-    private static ArrayList<Integer> dots_in_box(int dot1, int dot2, int dot3, int left, int right) {
-        ArrayList<Integer> answer = new ArrayList<>();
 
-        if (left <= dot1 && dot1 <= right) {
-            answer.add(dot1);
-        }
-        if (left <= dot2 && dot2 <= right) {
-            answer.add(dot2);
-        }
-        if (left <= dot3 && dot3 <= right) {
-            answer.add(dot3);
-        }
+    private static List<Integer> finding_board_x(int x1, int y1, int x2, int y2, int board_y) {
+        List<Integer> result = new ArrayList<>(2);
 
-        return answer;
-    }
-
-    private static Integer finding_board_x(int x1, int y1, int x2, int y2, int board_y) {
+        // Horizontal edge
         if (y1 == y2) {
-            return null;
+            if (board_y == y1) {
+                result.add(x1);
+                result.add(x2);
+            }
+            return result;
         }
+
         double x = x1 + (board_y - y1) / (double) (y2 - y1) * (x2 - x1);
-        return (int) Math.round(x);
+        result.add((int) Math.round(x));
+        return result;
     }
 
     public static Color interpolated(final int x_a, final int y_a,
